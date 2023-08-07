@@ -41,15 +41,7 @@ public class SocialMediaController {
         app.get("/messages/{message_id}", this::getMessageById);
         app.delete("/messages/{message_id}", this::deleteMessageById);
         app.patch("/messages/{message_id}", this::updateMessageById);
-        // app.get("/messages", ctx -> {
-        //     List<Message> messages = messageService.getAllMessages();
-        //     ctx.json(messages);
-        // });
-        // app.get("/accounts/{account_id}/messages", ctx -> {
-        //     int accountId = Integer.parseInt(ctx.pathParam("account_id"));
-        //     List<Message> messages = messageService.getMessagesByUserId(accountId);
-        //     ctx.json(messages);
-        // });
+        app.get("/accounts/{account_id}/messages", this::getMessagesFromUser);
 
 
         return app;
@@ -102,8 +94,7 @@ public class SocialMediaController {
             }
     }
     private void getMessageById(Context ctx) throws JsonProcessingException{
-        // ObjectMapper mapper = new ObjectMapper();
-        // Message message = mapper.readValue(ctx.body(), Message.class);
+        
         int messageId = Integer.parseInt(ctx.pathParam("message_id"));
             Message foundMessage = messageService.getMessageById(messageId);
            
@@ -125,30 +116,37 @@ public class SocialMediaController {
             }
     }
 
-    private void updateMessageById(Context ctx) throws JsonProcessingException{
-        // ObjectMapper mapper = new ObjectMapper();
-        // Message message = mapper.readValue(ctx.body(), Message.class);
-        // int messageId = Integer.parseInt(ctx.pathParam("message_id"));
-        // boolean updatedMessage = messageService.updateMessage(message);
-             
-            
-        //     if (updatedMessage) {
-        //         ctx.json(message);
-        //     } else {
-        //         ctx.status(200);
-        //     }
+    
+    private void updateMessageById(Context ctx) throws JsonProcessingException {
         int messageId = Integer.parseInt(ctx.pathParam("message_id"));
         Message message = ctx.bodyAsClass(Message.class);
         message.setMessage_id(messageId);
-        message.setPosted_by(message.getPosted_by());
-        message.setTime_posted_epoch(message.getTime_posted_epoch());
-        boolean updated = messageService.updateMessage(message);
+        
+        // Get the existing message
+        Message foundMessage = messageService.getMessageById(messageId);
+        
+        if (foundMessage == null) {
+            ctx.status(400); 
+            return;
+        }        
+        
+        foundMessage.setMessage_text(message.getMessage_text());        
+        boolean updated = messageService.updateMessage(foundMessage);
+    
         if (updated) {
-            ctx.json(message);
+            ctx.json(foundMessage); // Successful update
         } else {
-            ctx.status(400);
+            ctx.status(400); // Update failed
         }
     }
+    
+    private void getMessagesFromUser(Context ctx){
+        int accountId = Integer.parseInt(ctx.pathParam("account_id"));
+            List<Message> messages = messageService.getMessagesByUserId(accountId);
+            ctx.json(messages);
+
+    }
+
 
 
 
