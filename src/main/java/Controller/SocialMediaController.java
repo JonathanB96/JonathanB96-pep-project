@@ -31,6 +31,7 @@ public class SocialMediaController {
         Javalin app = Javalin.create();
         app.get("/", ctx -> ctx.result("Hello World"));
         app.post("/register", this::insertAccountHandler);
+        app.post("/login", this::userLoginHandler);
 
 
         return app;
@@ -41,7 +42,7 @@ public class SocialMediaController {
      * @param context The Javalin Context object manages information about both the HTTP request and response.
      */
     private void insertAccountHandler(Context ctx) throws JsonProcessingException {
-        // Account account = ctx.bodyAsClass(Account.class);
+        
             ObjectMapper mapper = new ObjectMapper();
             Account account = mapper.readValue(ctx.body(), Account.class);
             Account addedAccount = accountService.registerAccount(account);
@@ -50,14 +51,19 @@ public class SocialMediaController {
             } else{
                 ctx.status(400);
             }
+            
+    }
 
+    private void userLoginHandler(Context ctx) throws JsonProcessingException{
+        ObjectMapper mapper = new ObjectMapper();
+        Account account = mapper.readValue(ctx.body(), Account.class);
+        Account loggeInUser = accountService.loginAccount(account);
+        if(loggeInUser!=null){
+            ctx.json(loggeInUser);
+        } else{
+            ctx.status(401);
+        }
 
-            // Account registeredAccount = accountService.registerAccount(account);
-            // if (registeredAccount != null) {
-            //     ctx.json(registeredAccount);
-            // } else {
-            //     ctx.status(400).json("Account registration failed.");
-            // }
     }
 
 

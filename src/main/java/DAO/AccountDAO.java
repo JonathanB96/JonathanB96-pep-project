@@ -58,6 +58,7 @@ public class AccountDAO {
         } 
         return null;
     }
+
     public Account findAccountById(int id) {
         Connection conn = null;
         PreparedStatement ps = null;
@@ -69,10 +70,35 @@ public class AccountDAO {
             ps.setInt(1, id);
             rs = ps.executeQuery();
             if (rs.next()) {
-               
-                String username = rs.getString("username");
+                
                 String password = rs.getString("password");
-                return new Account(username, password);
+                String username = rs.getString("username");
+                return new Account(id, username, password);
+            }
+        } catch (SQLException e) {
+            // Handle the exception appropriately, e.g., logging the error
+            System.out.println(e.getMessage());
+        } 
+        return null;
+    }
+
+
+    public Account userLogin(String username, String password) {
+        Connection conn = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        try {
+            conn = ConnectionUtil.getConnection();
+            String sql = "SELECT * FROM account WHERE username = ? and password = ?";
+            ps = conn.prepareStatement(sql);
+            ps.setString(1, username);
+            ps.setString(2, password);
+            rs = ps.executeQuery();
+            if (rs.next()) {
+               
+                
+                return new Account(rs.getInt("account_id"),
+                rs.getString("username"), rs.getString("password"));
             }
         } catch (SQLException e) {
             // Handle the exception appropriately, e.g., logging the error
