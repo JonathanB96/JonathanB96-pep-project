@@ -15,7 +15,7 @@ public class MessageService {
 
     public Message createMessage(Message message) {
         // Check if the message_text is not blank and not over 255 characters
-        if (message.getMessage_text().trim().isEmpty() || message.getMessage_text().length() > 255) {
+        if (message.getMessage_text().trim().isEmpty() || message.getMessage_text().length() > 254) {
             return null;
         }
 

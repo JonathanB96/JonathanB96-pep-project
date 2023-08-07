@@ -2,11 +2,15 @@ package Controller;
 
 import io.javalin.Javalin;
 import io.javalin.http.Context;
+
+import java.util.List;
+
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import Service.AccountService;
 import Service.MessageService;
 import Model.Account;
+import Model.Message;
 
 /**
  * TODO: You will need to write your own endpoints and handlers for your controller. The endpoints you will need can be
@@ -29,9 +33,12 @@ public class SocialMediaController {
      */
     public Javalin startAPI() {
         Javalin app = Javalin.create();
-        app.get("/", ctx -> ctx.result("Hello World"));
+        app.get("/", ctx -> ctx.result("Welcome to my Project"));
         app.post("/register", this::insertAccountHandler);
         app.post("/login", this::userLoginHandler);
+        app.get("/messages", this::getAllMessagesHandler);
+        app.post("/messages", this::createMessageHandler);
+        app.get("/messages/{message_id}", this::getMessageById);
 
 
         return app;
@@ -64,6 +71,35 @@ public class SocialMediaController {
             ctx.status(401);
         }
 
+    }
+
+    private void getAllMessagesHandler(Context ctx){
+        
+            List<Message> messages = messageService.getAllMessages();
+            ctx.json(messages);
+
+    }
+    private void createMessageHandler(Context ctx) throws JsonProcessingException {
+        ObjectMapper mapper = new ObjectMapper();
+        Message message = mapper.readValue(ctx.body(), Message.class);
+        Message createdMessage = messageService.createMessage(message);
+        
+            if (createdMessage != null) {
+                ctx.json(createdMessage);
+            } else {
+                ctx.status(400);
+            }
+    }
+    private void getMessageById(Context ctx) throws JsonProcessingException{
+        // ObjectMapper mapper = new ObjectMapper();
+        // Message message = mapper.readValue(ctx.body(), Message.class);
+        int messageId = Integer.parseInt(ctx.pathParam("message_id"));
+            Message foundMessage = messageService.getMessageById(messageId);
+            if (foundMessage != null) {
+                ctx.json(foundMessage);
+            } else {
+                ctx.status(404);
+            }
     }
 
 
