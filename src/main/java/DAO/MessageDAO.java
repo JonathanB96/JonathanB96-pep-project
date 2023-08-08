@@ -7,7 +7,6 @@ import Util.ConnectionUtil;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -31,7 +30,7 @@ public class MessageDAO {
                 return new Message(generatedMessageId, message.getPosted_by(), message.getMessage_text(), message.getTime_posted_epoch());
             }
         } catch (SQLException e) {
-            // Handle the exception appropriately, e.g., logging the error
+            
             System.out.println(e.getMessage());
         } 
         return null;
@@ -55,7 +54,7 @@ public class MessageDAO {
                 messages.add(new Message(messageId, postedBy, messageText, timePostedEpoch));
             }
         } catch (SQLException e) {
-            // Handle the exception appropriately, e.g., logging the error
+           
             System.out.println(e.getMessage());
         } 
         return messages;
@@ -78,7 +77,7 @@ public class MessageDAO {
                 return new Message(messageId, postedBy, messageText, timePostedEpoch);
             }
         } catch (SQLException e) {
-            // Handle the exception appropriately, e.g., logging the error
+            
             System.out.println(e.getMessage());
         } 
         return null;
@@ -95,7 +94,7 @@ public class MessageDAO {
             int rowsAffected = ps.executeUpdate();
             return rowsAffected > 0;
         } catch (SQLException e) {
-            // Handle the exception appropriately, e.g., logging the error
+           
             System.out.println(e.getMessage());
         } 
         return false;
@@ -113,7 +112,7 @@ public class MessageDAO {
             int rowsAffected = ps.executeUpdate();
             return rowsAffected > 0;
         } catch (SQLException e) {
-            // Handle the exception appropriately, e.g., logging the error
+            
             System.out.println(e.getMessage());
         } 
         return false;
@@ -138,7 +137,7 @@ public class MessageDAO {
                 messages.add(new Message(messageId, postedBy, messageText, timePostedEpoch));
             }
         } catch (SQLException e) {
-            // Handle the exception appropriately, e.g., logging the error
+            
             System.out.println(e.getMessage());
         } 
         return messages;

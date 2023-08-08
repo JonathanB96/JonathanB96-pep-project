@@ -14,19 +14,19 @@ public class MessageService {
     }
 
     public Message createMessage(Message message) {
-        // Check if the message_text is not blank and not over 255 characters
+        
         if (message.getMessage_text().trim().isEmpty() || message.getMessage_text().length() > 254) {
             return null;
         }
 
-        // Check if the posted_by user exists
+        
         AccountDAO accountDAO = new AccountDAO();
         Account existingAccount = accountDAO.findAccountById(message.getPosted_by());
         if (existingAccount == null) {
             return null;
         }
 
-        // Save the new message to the database
+        
         return messageDAO.insertMessage(message);
     }
 
@@ -43,7 +43,7 @@ public class MessageService {
     }
 
     public boolean updateMessage(Message message) {
-        // Check if the message_text is not blank and not over 255 characters
+        
         if (message.getMessage_text().trim().isEmpty() || message.getMessage_text().length() > 254) {
             return false;
         }

@@ -53,7 +53,7 @@ public class AccountDAO {
                 return new Account(accountId, username, password);
             }
         } catch (SQLException e) {
-            // Handle the exception appropriately, e.g., logging the error
+            
             System.out.println(e.getMessage());
         } 
         return null;
@@ -76,7 +76,7 @@ public class AccountDAO {
                 return new Account(id, username, password);
             }
         } catch (SQLException e) {
-            // Handle the exception appropriately, e.g., logging the error
+           
             System.out.println(e.getMessage());
         } 
         return null;
@@ -101,7 +101,7 @@ public class AccountDAO {
                 rs.getString("username"), rs.getString("password"));
             }
         } catch (SQLException e) {
-            // Handle the exception appropriately, e.g., logging the error
+            
             System.out.println(e.getMessage());
         } 
         return null;
